@@ -182,6 +182,8 @@ export default class ImageViewer extends React.Component<Props, State> {
       imageLoaded = true;
     }
 
+    
+
     // 如果已知源图片宽高，直接设置为 success
     if (image.width && image.height) {
       if (this.props.enablePreload && imageLoaded === false) {
@@ -194,13 +196,18 @@ export default class ImageViewer extends React.Component<Props, State> {
       return;
     }
 
-    Image.getSize(
+    const imgHeaders = image.props.headers
+    console.log("imgHeaders===>>",imgHeaders)
+
+    Image.getSizeWithHeaders(
       image.url,
+      imgHeaders,
       (width: number, height: number) => {
         imageStatus.width = width;
         imageStatus.height = height;
         imageStatus.status = 'success';
         saveImageSize();
+        console.log("===>>",imageStatus)
       },
       () => {
         try {
@@ -211,6 +218,7 @@ export default class ImageViewer extends React.Component<Props, State> {
           saveImageSize();
         } catch (newError) {
           // Give up..
+          console.log("newError===>>",newError)
           imageStatus.status = 'fail';
           saveImageSize();
         }

@@ -173,6 +173,15 @@ export class Props {
   };
 
   /**
+   * Render video component
+   * @param props 
+   * @returns 
+   */
+  public renderVideo?: (props: any) => React.ReactElement<any> = (props: any) => {
+    return null as any;
+  };
+
+  /**
    * 自定义左翻页按钮
    */
   public renderArrowLeft?: () => React.ReactElement<any> = () => {
@@ -298,11 +307,15 @@ export interface IImageInfo {
    * 初始是否不超高 TODO:
    */
   freeWidth?: boolean;
+  /**
+   * 是否是视频
+   */
+  isVideo?: boolean;
 }
 
 export interface IImageSize {
   width: number;
   height: number;
   // 图片加载状态
-  status: 'loading' | 'success' | 'fail';
+  status: 'loading' | 'success' | 'fail' | 'video';
 }

@@ -160,6 +160,15 @@ export default class ImageViewer extends React.Component<Props, State> {
       this.setState({ imageSizes });
     };
 
+    if(image.isVideo){
+      const { width, height } = Dimensions.get("window")
+      imageStatus.width = width;
+      imageStatus.height = height;
+      imageStatus.status = 'video';
+      saveImageSize();
+      return;
+    }
+
     if (this!.state!.imageSizes![index].status === 'success') {
       // 已经加载过就不会加载了
       return;
@@ -196,18 +205,16 @@ export default class ImageViewer extends React.Component<Props, State> {
       return;
     }
 
-    const imgHeaders = image.props.headers
-    console.log("imgHeaders===>>",imgHeaders)
+    // const imgHeaders = image.props.headers
 
-    Image.getSizeWithHeaders(
+    (Image as any).getSizeWithHeaders(
       image.url,
-      imgHeaders,
+      image.props.headers,
       (width: number, height: number) => {
         imageStatus.width = width;
         imageStatus.height = height;
         imageStatus.status = 'success';
         saveImageSize();
-        console.log("===>>",imageStatus)
       },
       () => {
         try {
@@ -591,6 +598,37 @@ export default class ImageViewer extends React.Component<Props, State> {
                 })}
             </Wrapper>
           );
+        case 'video':
+
+          if (typeof image.props.source === 'number') {
+            // source = require(..), doing nothing
+          } else {
+            if (!image.props.source) {
+              image.props.source = {};
+            }
+            image.props.source = {
+              uri: image.url,
+              ...image.props.source
+            };
+          }
+
+
+          return (
+            <Wrapper
+              key={index}
+              style={this.styles.modalContainer}
+              imageWidth={screenWidth}
+              imageHeight={screenHeight}
+              pinchToZoom={false}
+              panToMove={true}
+            >
+              {this!.props!.renderVideo!(image.props)}
+              <View style={{backgroundColor:'transparent',zIndex:9999,width:screenWidth,height:screenHeight,position:'absolute'}}>
+
+              </View>
+            </Wrapper>
+            
+          )
       }
     });
 
